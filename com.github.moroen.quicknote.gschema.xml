@@ -1,0 +1,18 @@
+<schemalist>
+    <schema id="com.github.moroen.quicknote" path="/com/github/moroen/quicknote/" gettext-domain="quicknote">
+        <key name="width" type="i">
+            <default>400</default>
+            <summary>Window Width</summary>
+            <description>
+                The applicationwindow width
+            </description>
+        </key>
+        <key name="height" type="i">
+            <default>300</default>
+            <summary>Window Height</summary>
+            <description>
+                The applicationwindow height
+            </description>
+        </key>
+    </schema>
+</schemalist>
