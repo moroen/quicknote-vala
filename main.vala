@@ -39,6 +39,7 @@ public class MainWindow : ApplicationWindow {
 
             this.settings.set_int("height", this.height);
             this.settings.set_int("width", this.width);
+            GLib.Settings.sync ();
             
             stdout.printf("Destroy - Width: %d Height: %d\n", this.width, this.height);
         });
