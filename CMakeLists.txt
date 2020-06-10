@@ -85,3 +85,5 @@ set_property(
 # Install the executable.
 install (TARGETS ${CMAKE_PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+glib_install_schemas("data/settings/com.github.moroen.quicknote.gschema.xml")
