@@ -5,10 +5,16 @@ include(GNUInstallDirs)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+IF(APPLE)
+    # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+    LINK_DIRECTORIES(/usr/local/lib)
+ENDIF()
+
 # Check dependencies
 find_package(GLib "2.38" REQUIRED)
 find_package(Vala 0.48 REQUIRED)
 find_package(GIO REQUIRED)
+find_package(Intl REQUIRED)
 
 find_package(PkgConfig)
 set(REQUIRE_GTK "3.20")
@@ -32,7 +38,7 @@ set(LIBS
 	${GOBJECT_LIBRARIES}
 	${GIO_LIBRARIES}
 	${GTHREAD_LIBRARIES}
-	${GEE_LIBRARIES}
+  ${GEE_LIBRARIES}
 )
 
 link_libraries(${LIBS})
