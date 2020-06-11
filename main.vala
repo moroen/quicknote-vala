@@ -23,13 +23,17 @@ public class MainWindow : ApplicationWindow {
     private TextView textView;
 
     public MainWindow () {
-        print ("Init");
 
         this.settings = new GLib.Settings ("com.github.moroen.quicknote");
 
+        try {
+            this.icon = IconTheme.get_default ().load_icon ("accessories-text-editor", 48, 0);
+        } catch (Error e) {
+            stderr.printf (e.message);
+        }
+
         /* Connect default signals */
         this.destroy.connect ( () => {
-            print ("Destroy");
             
             try {
                 FileUtils.set_contents(this.file_name, this.get_text());
@@ -40,15 +44,11 @@ public class MainWindow : ApplicationWindow {
             this.settings.set_int("height", this.height);
             this.settings.set_int("width", this.width);
             GLib.Settings.sync ();
-            
-            stdout.printf("Destroy - Width: %d Height: %d\n", this.width, this.height);
         });
 
         this.size_allocate.connect ( () => {
             this.get_size (out this.width, out this.height);
         });
-
-        stdout.printf("Init - Width: %d Height: %d\n", this.settings.get_int("width"), this.settings.get_int("height"));
 
         this.set_default_size(this.settings.get_int("width"), this.settings.get_int("height"));
 

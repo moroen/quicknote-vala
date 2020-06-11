@@ -1,4 +1,4 @@
-project('hello', 'vala', 'c')
+project('quicknote', 'vala', 'c')
 
 gnome = import('gnome')
 
@@ -17,4 +17,4 @@ gresources = gnome.compile_resources(
 
 sources = files('main.vala')
 
-executable('hello', sources, gresources, dependencies: dependencies)
+executable('quicknote', sources, gresources, dependencies: dependencies)
