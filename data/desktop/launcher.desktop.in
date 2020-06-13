@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=@NAME@
+Comment=@INSTALLDIR@
+Icon=menulibre
+Exec=@BIN@
+Terminal=false
+Categories=GTK
+
