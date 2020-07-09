@@ -20,7 +20,7 @@ gresources = gnome.compile_resources(
     source_dir: ['data']
 )
 
-if host_system != 'windows'
+if host_system == 'linux'
     conf_data = configuration_data({
         'NAME': meson.project_name(),
         'INSTALLDIR': join_paths(get_option('datadir'), 'applications'),
