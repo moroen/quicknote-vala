@@ -39,7 +39,7 @@ if host_system == 'windows'
     schemadir = join_paths(meson.current_build_dir(), 'share','glib-2.0', 'schemas')
     install_exe = false
 else
-    schemadir = join_paths(get_option('datadir'), 'glib-2.0','schemas')
+    schemadir = join_paths(get_option('prefix'), get_option('datadir'), 'glib-2.0','schemas')
     install_exe = true
 endif
 
