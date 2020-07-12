@@ -18,6 +18,7 @@ public class MainWindow : ApplicationWindow {
 
     string file_name = "%s/.quicknote".printf (GLib.Environment.get_home_dir ());
 
+    Note.Note[] notes = Note.test_data();
 
     [GtkChild]
     private TextView textView;
