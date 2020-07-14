@@ -3,13 +3,24 @@ using Gtk;
 [GtkTemplate (ui = "/ui/main.ui")]
 public class MainWindow : ApplicationWindow {
 
-    /* 
+    
     [GtkCallback]
-    private void on_button1_clicked (Button button) {
-        print ("The button was clicked");
+    private void on_button_add_clicked (Button button) {
+        print ("The add-button was clicked");
     
     }
-    */
+    
+    [GtkCallback]
+    private void on_button_del_clicked (Button button) {
+        print ("The del-button was clicked");
+    
+    }
+
+    [GtkChild]
+    private TextView text_view;
+
+    [GtkChild]
+    private TreeView treeview_notes;
 
     private int width = 0;
     private int height = 0;
@@ -20,8 +31,7 @@ public class MainWindow : ApplicationWindow {
 
     Note.Note[] notes = Note.test_data();
 
-    [GtkChild]
-    private TextView textView;
+    
 
     public MainWindow () {
 
@@ -51,6 +61,12 @@ public class MainWindow : ApplicationWindow {
             this.get_size (out this.width, out this.height);
         });
 
+        /*
+        this.button_add.clicked.connect ( () => {
+            this.set_text("Clicked");
+        });
+        */
+
         this.set_default_size(this.settings.get_int("width"), this.settings.get_int("height"));
 
         /* read file */
@@ -68,7 +84,7 @@ public class MainWindow : ApplicationWindow {
     }
 
     public void set_text (string text) {
-        var buffer = this.textView.get_buffer();
+        var buffer = this.text_view.get_buffer();
 
         buffer.set_text(text);
     }
@@ -77,7 +93,7 @@ public class MainWindow : ApplicationWindow {
         TextIter start;
         TextIter end;
 
-        var buffer = this.textView.get_buffer();
+        var buffer = this.text_view.get_buffer();
         
         buffer.get_bounds(out start, out end);
         var text = buffer.get_text(start, end, false);
