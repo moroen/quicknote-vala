@@ -1,6 +1,12 @@
-namespace Note
+namespace Notes
 
 {
+    enum Column {
+        HEADER,
+        CONTENTS,
+        N_COLUMS
+    }
+
     public class Note {
         public string Id;
         public string Header;
@@ -19,5 +25,22 @@ namespace Note
             new Note ("Test 2", "This is test 2")
         };
 
+    }
+
+    public Gtk.ListStore get_liststore() {
+        Note[] notes = test_data();
+
+        var listmodel = new Gtk.ListStore (Column.N_COLUMS, typeof (string), typeof (string));
+        Gtk.TreeIter iter;
+
+        for (int i = 0; i < notes.length; i++) {
+            listmodel.append(out iter);
+            listmodel.set(iter, 
+                Column.HEADER, notes[i].Header,
+                Column.CONTENTS, notes[i].Contents
+            );
+        }
+
+        return listmodel;
     }
 }

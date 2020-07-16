@@ -2,11 +2,17 @@ using Gtk;
 
 [GtkTemplate (ui = "/ui/main.ui")]
 public class MainWindow : ApplicationWindow {
+    private int width = 0;
+    private int height = 0;
 
+    private GLib.Settings settings;
+
+    string file_name = "%s/.quicknote".printf (GLib.Environment.get_home_dir ());
     
     [GtkCallback]
     private void on_button_add_clicked (Button button) {
         print ("The add-button was clicked");
+        
     
     }
     
@@ -21,20 +27,10 @@ public class MainWindow : ApplicationWindow {
 
     [GtkChild]
     private TreeView treeview_notes;
-
-    private int width = 0;
-    private int height = 0;
-
-    private GLib.Settings settings;
-
-    string file_name = "%s/.quicknote".printf (GLib.Environment.get_home_dir ());
-
-    Note.Note[] notes = Note.test_data();
-
-    
+  
 
     public MainWindow () {
-
+        
         this.settings = new GLib.Settings ("com.github.moroen.quicknote");
 
         try {
@@ -71,6 +67,8 @@ public class MainWindow : ApplicationWindow {
 
         /* read file */
         this.read_file();
+
+        this.setup_treeview();
     }
 
     private void read_file () {
@@ -99,6 +97,29 @@ public class MainWindow : ApplicationWindow {
         var text = buffer.get_text(start, end, false);
 
         return text;
+    }
+
+    public void setup_treeview () {
+        var listmodel = Notes.get_liststore();       
+        this.treeview_notes.set_model (listmodel);
+        var cell = new Gtk.CellRendererText ();
+        this.treeview_notes.insert_column_with_attributes (-1, "Notes", cell, "text", Notes.Column.HEADER);
+
+        var selection = this.treeview_notes.get_selection ();
+        selection.changed.connect ( (selection) => {
+            print("Selection changed");
+            Gtk.TreeModel model;
+            Gtk.TreeIter iter;
+
+            string contents;
+
+            if (selection.get_selected (out model, out iter)) {
+                model.get(iter,
+                    Notes.Column.CONTENTS, out contents);
+                    this.text_view.get_buffer().set_text(contents);
+            }
+
+        });
     }
 }
 
