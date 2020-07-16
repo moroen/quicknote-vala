@@ -43,4 +43,22 @@ namespace Notes
 
         return listmodel;
     }
+
+    public Gtk.TreeIter new_note(Gtk.ListStore liststore) {
+        Gtk.TreeIter iter;
+        /*
+        var model = this.treeview_notes.get_model ();
+
+        model.get_iter_from_string (out iter, "0");  
+        this.listmodel.set(iter, Notes.Column.HEADER, "Tjoho");
+        */
+
+        liststore.append(out iter);
+        liststore.set(iter, 
+            Notes.Column.HEADER, "New note",
+            Notes.Column.CONTENTS, ""
+        );
+
+        return iter;
+    }
 }

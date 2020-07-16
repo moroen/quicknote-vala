@@ -8,17 +8,34 @@ public class MainWindow : ApplicationWindow {
     private GLib.Settings settings;
 
     string file_name = "%s/.quicknote".printf (GLib.Environment.get_home_dir ());
+
+    Gtk.ListStore listmodel;
+    
     
     [GtkCallback]
     private void on_button_add_clicked (Button button) {
         print ("The add-button was clicked");
+
         
-    
+       var iter = Notes.new_note(this.listmodel);
+
+        var selection = this.treeview_notes.get_selection ();
+
+        selection.select_iter(iter);
+
     }
     
     [GtkCallback]
     private void on_button_del_clicked (Button button) {
         print ("The del-button was clicked");
+        Gtk.TreeIter iter;
+        Gtk.TreeModel model;
+
+        var selection = this.treeview_notes.get_selection ();
+        
+        if (selection.get_selected(out model, out iter)) {
+            this.listmodel.remove(ref iter);
+        }
     
     }
 
@@ -68,6 +85,9 @@ public class MainWindow : ApplicationWindow {
         /* read file */
         this.read_file();
 
+        /* init liststore */
+        this.listmodel = Notes.get_liststore();
+
         this.setup_treeview();
     }
 
@@ -100,8 +120,8 @@ public class MainWindow : ApplicationWindow {
     }
 
     public void setup_treeview () {
-        var listmodel = Notes.get_liststore();       
-        this.treeview_notes.set_model (listmodel);
+             
+        this.treeview_notes.set_model (this.listmodel);
         var cell = new Gtk.CellRendererText ();
         this.treeview_notes.insert_column_with_attributes (-1, "Notes", cell, "text", Notes.Column.HEADER);
 
