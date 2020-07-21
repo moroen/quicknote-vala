@@ -7,10 +7,10 @@ namespace Notes
         N_COLUMS
     }
 
-    public class Note {
-        public string Id;
-        public string Header;
-        public string Contents;
+    public class Note: GLib.Object, Json.Serializable {
+        public string Id {get; set;}
+        public string Header {get; set;}
+        public string Contents {get; set;}
 
         public Note(string Header, string Contents) {
             this.Id = GLib.Uuid.string_random();
@@ -25,6 +25,30 @@ namespace Notes
             new Note ("Test 2", "This is test 2")
         };
 
+    }
+
+    public bool save_notes () {
+        var notes = test_data ();
+        
+        //size_t size;
+
+        // var json = Json.gobject_to_data (notes[0], out size);
+        
+        var array = new Json.Array.sized (notes.length);
+        for (int i = 0; i < notes.length; i++) {
+            var node = Json.gobject_serialize(notes[i]);
+            array.add_element (node);
+        }
+
+        var node = new Json.Node (Json.NodeType.ARRAY);
+        node.set_array(array);
+
+        Json.Generator generator = new Json.Generator ();
+        generator.set_root (node);
+
+        print (generator.to_data (null));      
+
+        return true;
     }
 
     public Gtk.ListStore get_liststore() {
@@ -55,8 +79,8 @@ namespace Notes
 
         liststore.append(out iter);
         liststore.set(iter, 
-            Notes.Column.HEADER, "New note",
-            Notes.Column.CONTENTS, ""
+            Column.HEADER, "New note",
+            Column.CONTENTS, ""
         );
 
         return iter;
