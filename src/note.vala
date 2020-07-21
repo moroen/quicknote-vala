@@ -8,12 +8,11 @@ namespace Notes
     }
 
     public class Note: GLib.Object, Json.Serializable {
-        public string Id {get; set;}
-        public string Header {get; set;}
-        public string Contents {get; set;}
+        public string Id {get; set; default = GLib.Uuid.string_random();}
+        public string Header {get; set; default = "New note"; }
+        public string Contents {get; set; default = "New note"; }
 
-        public Note(string Header, string Contents) {
-            this.Id = GLib.Uuid.string_random();
+        public Note.with_data(string Header, string Contents) {
             this.Header = Header;
             this.Contents = Contents;
         }
@@ -21,8 +20,8 @@ namespace Notes
 
     public Note[] test_data() {
         return {
-            new Note ("Test 1", "This is test 1"),
-            new Note ("Test 2", "This is test 2")
+            new Note.with_data ("Test 1", "This is test 1"),
+            new Note.with_data ("Test 2", "This is test 2")
         };
 
     }
@@ -54,14 +53,13 @@ namespace Notes
     public Gtk.ListStore get_liststore() {
         Note[] notes = test_data();
 
-        var listmodel = new Gtk.ListStore (Column.N_COLUMS, typeof (string), typeof (string));
+        var listmodel = new Gtk.ListStore (1, typeof (Note));
         Gtk.TreeIter iter;
 
         for (int i = 0; i < notes.length; i++) {
             listmodel.append(out iter);
             listmodel.set(iter, 
-                Column.HEADER, notes[i].Header,
-                Column.CONTENTS, notes[i].Contents
+                Column.HEADER, notes[i]
             );
         }
 
@@ -70,19 +68,8 @@ namespace Notes
 
     public Gtk.TreeIter new_note(Gtk.ListStore liststore) {
         Gtk.TreeIter iter;
-        /*
-        var model = this.treeview_notes.get_model ();
-
-        model.get_iter_from_string (out iter, "0");  
-        this.listmodel.set(iter, Notes.Column.HEADER, "Tjoho");
-        */
-
         liststore.append(out iter);
-        liststore.set(iter, 
-            Column.HEADER, "New note",
-            Column.CONTENTS, ""
-        );
-
+        liststore.set(iter, 0, new Note ());
         return iter;
     }
 }

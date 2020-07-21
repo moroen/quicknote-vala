@@ -121,19 +121,25 @@ public class MainWindow : ApplicationWindow {
              
         this.treeview_notes.set_model (this.listmodel);
         var cell = new Gtk.CellRendererText ();
-        this.treeview_notes.insert_column_with_attributes (-1, "Notes", cell, "text", Notes.Column.HEADER);
+
+        // this.treeview_notes.insert_column_with_attributes (-1, "Notes", cell, "text", Notes.Column.HEADER);
+
+        this.treeview_notes.insert_column_with_data_func (-1, "Notes", cell, (column, cell, model, iter) => {
+            Notes.Note note;
+            model.@get (iter, 0, out note);
+            (cell as Gtk.CellRendererText).text = note.Header;
+        });
+        
 
         var selection = this.treeview_notes.get_selection ();
         selection.changed.connect ( (selection) => {
             Gtk.TreeModel model;
             Gtk.TreeIter iter;
-
-            string contents;
+            Notes.Note note;
 
             if (selection.get_selected (out model, out iter)) {
-                model.get(iter,
-                    Notes.Column.CONTENTS, out contents);
-                    this.text_view.get_buffer().set_text(contents);
+                model.get(iter, 0, out note);
+                this.text_view.get_buffer().set_text(note.Contents);
                 this.button_del.set_sensitive(true);
             } else {
                 this.text_view.get_buffer().set_text("");
