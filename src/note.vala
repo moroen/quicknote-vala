@@ -26,26 +26,38 @@ namespace Notes
 
     }
 
-    public bool save_notes () {
-        var notes = test_data ();
-        
-        //size_t size;
+    public bool save_notes (Gtk.TreeModel model, string file_name) {
+       
+        var array = new Json.Array();
 
-        // var json = Json.gobject_to_data (notes[0], out size);
-        
-        var array = new Json.Array.sized (notes.length);
-        for (int i = 0; i < notes.length; i++) {
-            var node = Json.gobject_serialize(notes[i]);
-            array.add_element (node);
-        }
+        model.foreach ( (model, path, iter) => {
+            Note note;
+     
+            model.get(iter, 0, out note);
+            var node = Json.gobject_serialize(note);
+            array.add_element(node);
+            return false;
+        });    
 
         var node = new Json.Node (Json.NodeType.ARRAY);
         node.set_array(array);
 
-        Json.Generator generator = new Json.Generator ();
-        generator.set_root (node);
+        var jobj = new Json.Object ();
+        jobj.set_array_member ("notes", array);
 
-        print (generator.to_data (null));      
+        var root_node = new Json.Node (Json.NodeType.OBJECT);
+        root_node.set_object (jobj);
+        
+        Json.Generator generator = new Json.Generator ();
+        generator.set_root (root_node);
+
+        try {
+            FileUtils.set_contents(file_name, generator.to_data (null));
+        } catch (FileError e) {
+            stderr.printf("%s\n", e.message);
+        }
+        
+        // print (generator.to_data (null));      
 
         return true;
     }

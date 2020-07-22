@@ -7,8 +7,6 @@ public class MainWindow : ApplicationWindow {
 
     private GLib.Settings settings;
 
-    string file_name = "%s/.quicknote".printf (GLib.Environment.get_home_dir ());
-
     Gtk.ListStore listmodel;
 
     [GtkChild]
@@ -42,7 +40,7 @@ public class MainWindow : ApplicationWindow {
 
     [GtkCallback]
     private void on_button_test_clicked (Button button) {
-        Notes.save_notes ();
+        Notes.save_notes (this.treeview_notes.get_model (), this.settings.get_string ("filename"));
     }
 
     
@@ -61,12 +59,13 @@ public class MainWindow : ApplicationWindow {
         /* Connect default signals */
         this.destroy.connect ( () => {
             
+            /*
             try {
                 FileUtils.set_contents(this.file_name, this.get_text_from_buffer(this.text_view.get_buffer()));
             } catch (FileError e) {
                 stderr.printf("%s\n", e.message);
             }
-
+            */
             this.settings.set_int("height", this.height);
             this.settings.set_int("width", this.width);
             GLib.Settings.sync ();
@@ -80,7 +79,7 @@ public class MainWindow : ApplicationWindow {
         this.set_default_size(this.settings.get_int("width"), this.settings.get_int("height"));
 
         /* read file */
-        this.read_file();
+        // this.read_file();
 
         this.text_view.get_buffer().changed.connect ( (buffer) => {
             // print(get_text_from_buffer(buffer));
@@ -92,6 +91,7 @@ public class MainWindow : ApplicationWindow {
         this.setup_treeview();
     }
 
+    /*
     private void read_file () {
         string content;
         try {
@@ -101,6 +101,7 @@ public class MainWindow : ApplicationWindow {
             stderr.printf("%s\n", e.message);
         }
     }
+    */
 
     public void set_text (string text) {
         var buffer = this.text_view.get_buffer();
@@ -126,8 +127,11 @@ public class MainWindow : ApplicationWindow {
 
         this.treeview_notes.insert_column_with_data_func (-1, "Notes", cell, (column, cell, model, iter) => {
             Notes.Note note;
+
             model.@get (iter, 0, out note);
-            (cell as Gtk.CellRendererText).text = note.Header;
+
+            unowned Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
+            renderer.text = note.Header;
         });
         
 

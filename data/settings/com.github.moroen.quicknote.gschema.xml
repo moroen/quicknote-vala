@@ -14,5 +14,12 @@
                 The applicationwindow height
             </description>
         </key>
+        <key name="filename" type="s">
+            <default>"quicknote.info"</default>
+            <summary>Filename for notes</summary>
+            <description>
+                The filename for storing notes
+            </description>
+        </key>
     </schema>
 </schemalist>
