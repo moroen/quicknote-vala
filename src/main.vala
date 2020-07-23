@@ -40,7 +40,7 @@ public class MainWindow : ApplicationWindow {
 
     [GtkCallback]
     private void on_button_test_clicked (Button button) {
-        Notes.save_notes (this.treeview_notes.get_model (), this.settings.get_string ("filename"));
+        Notes.save_liststore (this.treeview_notes.get_model (), this.settings.get_string ("filename"));
     }
 
     
@@ -59,13 +59,8 @@ public class MainWindow : ApplicationWindow {
         /* Connect default signals */
         this.destroy.connect ( () => {
             
-            /*
-            try {
-                FileUtils.set_contents(this.file_name, this.get_text_from_buffer(this.text_view.get_buffer()));
-            } catch (FileError e) {
-                stderr.printf("%s\n", e.message);
-            }
-            */
+            Notes.save_liststore(this.treeview_notes.get_model (), this.settings.get_string("filename"));
+
             this.settings.set_int("height", this.height);
             this.settings.set_int("width", this.width);
             GLib.Settings.sync ();
@@ -86,22 +81,10 @@ public class MainWindow : ApplicationWindow {
         });
 
         /* init liststore */
-        this.listmodel = Notes.get_liststore();
+        this.listmodel = Notes.get_liststore(this.settings.get_string("filename"));
 
         this.setup_treeview();
     }
-
-    /*
-    private void read_file () {
-        string content;
-        try {
-            FileUtils.get_contents(this.file_name, out content);
-            this.set_text(content);
-        } catch (FileError e) {
-            stderr.printf("%s\n", e.message);
-        }
-    }
-    */
 
     public void set_text (string text) {
         var buffer = this.text_view.get_buffer();
@@ -122,8 +105,6 @@ public class MainWindow : ApplicationWindow {
              
         this.treeview_notes.set_model (this.listmodel);
         var cell = new Gtk.CellRendererText ();
-
-        // this.treeview_notes.insert_column_with_attributes (-1, "Notes", cell, "text", Notes.Column.HEADER);
 
         this.treeview_notes.insert_column_with_data_func (-1, "Notes", cell, (column, cell, model, iter) => {
             Notes.Note note;

@@ -26,7 +26,7 @@ namespace Notes
 
     }
 
-    public bool save_notes (Gtk.TreeModel model, string file_name) {
+    public bool save_liststore (Gtk.TreeModel model, string file_name) {
        
         var array = new Json.Array();
 
@@ -62,19 +62,31 @@ namespace Notes
         return true;
     }
 
-    public Gtk.ListStore get_liststore() {
-        Note[] notes = test_data();
-
+    public Gtk.ListStore get_liststore(string file_name) {
         var listmodel = new Gtk.ListStore (1, typeof (Note));
         Gtk.TreeIter iter;
 
-        for (int i = 0; i < notes.length; i++) {
-            listmodel.append(out iter);
-            listmodel.set(iter, 
-                Column.HEADER, notes[i]
-            );
-        }
+        try {
+            var parser = new Json.Parser();
+            parser.load_from_file (file_name);
 
+            var root = parser.get_root ().get_object ();
+            var notes_array = root.get_array_member("notes");
+
+            foreach (var node_element in notes_array.get_elements ()) {
+                Note note = Json.gobject_deserialize (typeof(Note), node_element) as Note;
+                listmodel.append(out iter);
+                listmodel.set(iter, Column.HEADER, note);
+            }
+        } catch (FileError e) {
+            stderr.printf("%s\n", e.message);
+
+            listmodel.append(out iter);
+            listmodel.set(iter, Column.HEADER, new Note.with_data("New note", "New note"));
+         
+        } catch (Error e) {
+            stderr.printf("%s\n", e.message);
+        }
         return listmodel;
     }
 
