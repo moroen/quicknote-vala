@@ -49,7 +49,13 @@ meson.add_install_script('meson_post_install.py', host_system, schemadir)
 
 sources = files('src/main.vala', 'src/note.vala', 'src/mainwindow.vala')
 
+if get_option('console')
+    build_gui_app = false
+else
+    build_gui_app = true
+endif
+
 executable(executable_name, sources, gresources, 
     dependencies: dependencies, 
-    gui_app: true,
+    gui_app: build_gui_app,
     install: install_exe)
