@@ -112,6 +112,11 @@ public class MainWindow : ApplicationWindow {
              
         this.treeview_notes.set_model (this.listmodel);
         var cell = new Gtk.CellRendererText ();
+        cell.editable = true;
+
+        cell.edited.connect ( (path, new_text) => {
+            this.current_note.Header = new_text;
+        });
 
         this.treeview_notes.insert_column_with_data_func (-1, "Notes", cell, (column, cell, model, iter) => {
             Notes.Note note;
