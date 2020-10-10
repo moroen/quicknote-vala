@@ -17,7 +17,7 @@ dependencies = [
 
 gresources = gnome.compile_resources(
     meson.project_name() + '.resources',
-    'data/resources.gresources.xml',
+    'data/quicknote.gresources.xml',
     source_dir: ['data']
 )
 

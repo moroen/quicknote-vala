@@ -56,6 +56,11 @@ public class MainWindow : ApplicationWindow {
             stderr.printf (e.message);
         }
 
+        Gtk.CssProvider css_provider = new Gtk.CssProvider ();
+        css_provider.load_from_resource("/css/macos.css");
+        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+
+
         /* Connect default signals */
         this.destroy.connect ( () => {
             if (this.current_note != null) {
