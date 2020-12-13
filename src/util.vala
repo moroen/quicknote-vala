@@ -22,3 +22,7 @@ public string get_text_from_buffer (Gtk.TextBuffer buffer) {
     var text = buffer.get_text(start, end, false);
     return text;
 }
+
+public void println(string text) {
+    stdout.printf("%s\n", text);
+}

@@ -7,6 +7,9 @@ host_system = host_machine.system()
 
 gnome = import('gnome')
 
+inc = include_directories('vala-scp')
+subdir('vala-scp')
+
 dependencies = [
     dependency('glib-2.0'),
     dependency('gobject-2.0'),
@@ -56,6 +59,8 @@ else
 endif
 
 executable(executable_name, sources, gresources, 
-    dependencies: dependencies, 
+    dependencies: dependencies,
+    include_directories: inc,
+    link_with: scp_lib, 
     gui_app: build_gui_app,
     install: install_exe)

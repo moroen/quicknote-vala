@@ -21,5 +21,19 @@
                 The filename for storing notes
             </description>
         </key>
+        <key name="remotefilename" type="s">
+            <default>"quicknote.info"</default>
+            <summary>Filename for notes</summary>
+            <description>
+                The remote file
+            </description>
+        </key>
+        <key name="useremote" type="b">
+            <default>false</default>
+            <summary>Filename for notes</summary>
+            <description>
+                The remote file
+            </description>
+        </key>
     </schema>
 </schemalist>
