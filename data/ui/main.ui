@@ -71,14 +71,14 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button_test">
+                  <object class="GtkButton" id="button_prefs">
                     <property name="label">gtk-preferences</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
                     <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="on_button_test_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_button_prefs_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

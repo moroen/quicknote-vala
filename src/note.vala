@@ -68,7 +68,7 @@ namespace Notes
 
         try {
             var parser = new Json.Parser();
-            parser.load_from_file (file_name);
+            parser.load_from_file (expand_file_name (file_name));
 
             var root = parser.get_root ().get_object ();
             var notes_array = root.get_array_member("notes");

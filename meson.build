@@ -47,7 +47,7 @@ endif
 install_data('data/settings/com.github.moroen.quicknote.gschema.xml', install_dir: schemadir)
 meson.add_install_script('meson_post_install.py', host_system, schemadir)
 
-sources = files('src/main.vala', 'src/note.vala', 'src/mainwindow.vala')
+sources = files('src/main.vala', 'src/note.vala', 'src/mainwindow.vala', 'src/util.vala', 'src/settings.vala')
 
 if get_option('console')
     build_gui_app = false

@@ -42,8 +42,10 @@ public class MainWindow : ApplicationWindow {
     }
 
     [GtkCallback]
-    private void on_button_test_clicked (Button button) {
-        Notes.save_liststore (this.treeview_notes.get_model (), this.settings.get_string ("filename"));
+    private void on_button_prefs_clicked (Button button) {
+        stdout.printf("%s\n", "Prefs clicked");
+        var settings_dialog = new SettingsDialog ();
+        settings_dialog.show_all ();
     }
 
     public MainWindow () {
@@ -56,9 +58,9 @@ public class MainWindow : ApplicationWindow {
             stderr.printf (e.message);
         }
 
-        Gtk.CssProvider css_provider = new Gtk.CssProvider ();
-        css_provider.load_from_resource("/css/macos.css");
-        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        // Gtk.CssProvider css_provider = new Gtk.CssProvider ();
+        // css_provider.load_from_resource("/css/macos.css");
+        // Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
 
 
         /* Connect default signals */
@@ -104,14 +106,7 @@ public class MainWindow : ApplicationWindow {
         buffer.set_text(text);
     }
 
-    public string get_text_from_buffer (Gtk.TextBuffer buffer) {
-        TextIter start;
-        TextIter end;
-        
-        buffer.get_bounds(out start, out end);
-        var text = buffer.get_text(start, end, false);
-        return text;
-    }
+    
 
     public void setup_treeview () {
              
